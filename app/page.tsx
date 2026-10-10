@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { BrainCircuit, ChevronDown, ChevronUp, Layers } from 'lucide-react';
 import ChatPanel from '@/components/ChatPanel';
 import GraphViewer from '@/app/components/GraphViewer';
-import InspectorDrawer from '@/components/InspectorDrawer';
+import SourcePanel from '@/app/components/SourcePanel';
 import type { GraphNode, GraphLink } from '@/app/components/GraphViewer';
 
 interface ChatMessage {
@@ -116,12 +116,7 @@ export default function HomePage() {
           <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1 rounded-full bg-emerald/10 text-emerald border border-emerald/20">
             <Layers className="w-3 h-3" /> Graph Active
           </span>
-          <button
-            onClick={() => setDrawerOpen((s) => !s)}
-            className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg bg-white border border-slate-200/80 shadow-sm text-slate-700 hover:text-electric transition"
-          >
-            Inspector {drawerOpen ? <ChevronDown className="w-3 h-3" /> : <ChevronUp className="w-3 h-3" />}
-          </button>
+          <button onClick={() => {}} className="hidden" />
         </div>
       </header>
 
@@ -181,13 +176,7 @@ export default function HomePage() {
           </div>
 
           {/* Bottom Inspector */}
-          <InspectorDrawer
-            open={drawerOpen}
-            cypher={lastMeta.cypher}
-            latencyMs={lastMeta.latencyMs}
-            mock={lastMeta.mock}
-            error={lastMeta.error}
-          />
+          <SourcePanel cypher={lastMeta.cypher} latencyMs={lastMeta.latencyMs} mock={lastMeta.mock} error={lastMeta.error} graphData={graphData} />
         </section>
       </div>
 
