@@ -41,7 +41,8 @@ A failure in **payment-gateway** triggers cascading failures across dependent ti
 - **Carol Danvers** *(Payments Lead)* — On-call lead
 - **Alice Chen** *(Staff Backend Eng)* — Platform escalation
 
-**Recommended Action:** Trigger circuit breaker on upstream gateway and reroute to queue worker.`
+**Multi-hop Path:** Payment Gateway → Ledger API → User DB → Incident INC-002 → Resolved By Sofia Alvarez
+**Recommended Action:** Trigger circuit breaker on upstream gateway, page Carol Danvers / Alice Chen, reroute to queue worker.`
     };
   }
 
@@ -74,6 +75,24 @@ Resolved outage records for core ledger operations:
 **Preventative Architecture:**
 Led to the creation of \`ADR-102\` (Migrate Ledger to event-driven Kafka logs) to eliminate database contention.`
   };
+}
+
+
+async function recordMemory(queryText: string, answer: string, cypher: string) {
+  try {
+    const { FalkorDB } = await import('falkordb');
+    const host = (process.env.FALKORDB_HOST || '').trim() || 'localhost';
+    const port = Number(String(process.env.FALKORDB_PORT || '49188').trim()) || 49188;
+    const username = (process.env.FALKORDB_USERNAME || 'falkordb').trim();
+    const password = (process.env.FALKORDB_PASSWORD || '').trim();
+    const client = await FalkorDB.connect({ host, port, username, password: password || undefined, socket: { tls: false, connectTimeout: 3000 } });
+    const graph = client.selectGraph('company_brain');
+    const sid = `sess-${Date.now()}`;
+    const safeQ = (queryText || '').slice(0, 300).replace(/'/g, "\\'");
+    const safeA = (answer || '').slice(0, 800).replace(/'/g, "\\'");
+    const safeC = (cypher || '').slice(0, 400).replace(/'/g, "\\'");
+    await graph.query(`MERGE (s:Session {id: '${sid}'}) MERGE (q:Question {text: '${safeQ}'}) MERGE (a:Answer {text: '${safeA}'}) MERGE (s)-[:ASKED]->(q) MERGE (q)-[:ANSWERED_BY]->(a) MERGE (a)-[:USES_CYPHER]->(:Query {statement: '${safeC}'}) MERGE (a)-[:CITES]->(:Source {graph: 'company_brain'})`, { TIMEOUT: 8000 } as any);
+  } catch (e: any) { console.warn('Memory skip:', e); }
 }
 
 export async function POST(req: Request) {
@@ -203,6 +222,9 @@ Return ONLY a single valid openCypher query for: "${queryText}". No markdown cod
     const sourceCite = `\n\n--- Sources ---\nCypher: ${targetCypher} | Nodes: ${graphData.nodes.length} | Links: ${graphData.links.length} | Latency: ${queryLatency || (Date.now() - startTime)}ms | Source nodes: ${graphData.nodes.slice(0,5).map((n:any)=>n.label||n.id).join(', ')}`;
     finalAnswer += sourceCite;
 
+    // Remember across sessions — shared state between agents
+    recordMemory(queryText, finalAnswer, targetCypher);
+
     return NextResponse.json({
       answer: finalAnswer,
       cypher: targetCypher,
@@ -211,6 +233,7 @@ Return ONLY a single valid openCypher query for: "${queryText}". No markdown cod
     });
   } catch (globalErr: any) {
     const fallback = getPresetCypher(queryText);
+    recordMemory(queryText, fallback.syntheticAnswer, fallback.cypher);
     return NextResponse.json({
       answer: fallback.syntheticAnswer,
       cypher: fallback.cypher,
