@@ -4,6 +4,10 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  serverExternalPackages: ['falkordb'],
+  experimental: {
+    serverComponentsExternalPackages: ['falkordb'],
+  },
 };
 
 module.exports = nextConfig;
