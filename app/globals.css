@@ -11,9 +11,10 @@ html {
 }
 
 body {
-  background-color: #F8FAFC;
+  background: linear-gradient(135deg, #FFF7ED 0%, #FDF2F8 40%, #E0F2FE 100%);
   color: #0f172a;
   font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  min-height: 100vh;
 }
 
 /* Ambient radial glows */

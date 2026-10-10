@@ -125,8 +125,14 @@ export async function GET(req: NextRequest) {
     await graph.query(SEED_CYPHER, { TIMEOUT: 10000 } as any);
 
     // Count total nodes in graph after seed
-    const countResult = await graph.query('MATCH (n) RETURN count(n) AS total', { TIMEOUT: 5000 } as any);
-    const seededNodes = (countResult as any)[0]?.total ? parseInt((countResult as any)[0].total) : 0;
+    const countResult = await graph.query('MATCH (n) RETURN count(n) AS total', { TIMEOUT: 5000 } as any) as any;
+    let seededNodes = 0;
+    if (countResult?.data && Array.isArray(countResult.data) && countResult.data.length > 0) {
+      const firstRow = countResult.data[0];
+      if (Array.isArray(firstRow) && firstRow.length > 0) {
+        seededNodes = parseInt(String(firstRow[0])) || 0;
+      }
+    }
 
     return NextResponse.json({ success: true, seededNodes });
   } catch (e: any) {
