@@ -185,8 +185,10 @@ Return ONLY a single valid openCypher query for: "${queryText}". No markdown cod
       };
     }
 
-    // 3. Synthesize Answer
-    if (apiKey) {
+    // 3. Fast answer for preset scenarios; synthesis only for custom queries
+    if (preset && (qLower.includes('blast') || qLower.includes('jwt') || qLower.includes('tribal') || qLower.includes('incident') || qLower.includes('forensic') || qLower.includes('ledger') || qLower.includes('gateway'))) {
+      finalAnswer = preset.syntheticAnswer;
+    } else if (apiKey) {
       try {
         const answerPrompt = `Question: "${queryText}"\nSynthesize a 2-paragraph executive response citing team ownership, downstream blast radius, and related architecture decisions.`;
         finalAnswer = await callGemini(answerPrompt, apiKey);

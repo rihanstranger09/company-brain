@@ -70,12 +70,12 @@ export default function GraphViewer({
         nodeId="id"
         nodeLabel="label"
         nodeColor={(n: any) => {
-          if (n.group === 'Service') return '#00A8E8';
-          if (n.group === 'Person') return '#66BB6A';
-          if (n.group === 'Decision') return '#FBAA60';
-          if (n.group === 'Incident') return '#FF7A85';
-          if (n.group === 'Team') return '#26C6DA';
-          return '#7B92B2';
+          if (n.group === 'Service') return '#00D4FF';
+          if (n.group === 'Person') return '#FFDD57';
+          if (n.group === 'Decision') return '#FF6B35';
+          if (n.group === 'Incident') return '#FF2E63';
+          if (n.group === 'Team') return '#8B5CF6';
+          return '#F59E0B';
         }}
         nodeRelSize={9}
         nodeVal={9}
@@ -88,7 +88,8 @@ export default function GraphViewer({
         linkDirectionalParticleSpeed={0.005}
         linkDirectionalParticleWidth={2}
         linkDirectionalParticleColor={() => '#00A8E8'}
-        backgroundColor="#F8FAFC"
+        backgroundColor="#FFFFFF"
+        key={nodes.length + '-' + links.length}
         onNodeClick={(node: any) => onNodeClick?.(node)}
       />
       <div className="absolute top-3 left-3 bg-white/80 backdrop-blur-md px-3 py-1.5 rounded-xl text-[11px] font-semibold text-slate-700 shadow-sm border border-slate-200/70">
