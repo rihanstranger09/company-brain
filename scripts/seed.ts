@@ -56,10 +56,10 @@ async function main() {
       MERGE (i4:Incident {id:'INC-004', title:'Notification Worker Backlog', severity:'P2', root_cause:'Third-party SMS provider rate limit hit during campaign.', resolved_at:'2026-06-01'})
 
       // Documents
-      MERGE (doc1:Document {id:'doc-1', title:'Auth Service Runbook', doc_type:'runbook', url:'/docs/auth-runbook'})
-      MERGE (doc2:Document {id:'doc-2', title:'Ledger API Spec', doc_type:'spec', url:'/docs/ledger-spec'})
-      MERGE (doc3:Document {id:'doc-3', title:'Payment Gateway Architecture', doc_type:'arch', url:'/docs/payment-arch'})
-      MERGE (doc4:Document {id:'doc-4', title:'Incident Post-Mortem Template', doc_type:'template', url:'/docs/postmortem'})
+      MERGE (doc1:Document {id:'doc-1', title:'Auth Service Runbook', doc_type:'runbook', url:'/docs/auth-runbook.md', last_updated:'2026-10-10'})
+      MERGE (doc2:Document {id:'doc-2', title:'Ledger API Spec', doc_type:'spec', url:'/docs/ledger-spec.md', last_updated:'2026-10-10'})
+      MERGE (doc3:Document {id:'doc-3', title:'ADR-101: JWT Auth', doc_type:'arch', url:'/docs/adr-101.md', last_updated:'2026-10-10'})
+      MERGE (doc4:Document {id:'doc-4', title:'Incident Post-Mortem INC-001', doc_type:'template', url:'/docs/incident-001.md', last_updated:'2026-10-10'})
 
       // Relationships: People -> Team (LEADS / MEMBER_OF)
       MERGE (p1)-[:LEADS]->(t1)

@@ -183,6 +183,10 @@ Return ONLY a single valid openCypher query for: "${queryText}". No markdown cod
       finalAnswer = preset.syntheticAnswer;
     }
 
+    // Source attribution for Track 3 evaluation
+    const sourceCite = `\n\n--- Sources ---\nCypher: ${targetCypher} | Nodes: ${graphData.nodes.length} | Links: ${graphData.links.length} | Latency: ${queryLatency || (Date.now() - startTime)}ms | Source nodes: ${graphData.nodes.slice(0,5).map((n:any)=>n.label||n.id).join(', ')}`;
+    finalAnswer += sourceCite;
+
     return NextResponse.json({
       answer: finalAnswer,
       cypher: targetCypher,
