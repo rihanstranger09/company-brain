@@ -84,6 +84,20 @@ export async function POST(req: Request) {
     const body = await req.json();
     queryText = body.message || body.query || '';
 
+    // Guard: only answer company-brain / graph questions
+    const relevantKeywords = ['blast','radius','payment','gateway','jwt','token','adr','incident','post-mortem','ledger','auth','service','team','owner','depends','downstream','dependency','graph','cypher','company','brain','falkor','knowledge'];
+    const qLower = queryText.toLowerCase();
+    const isRelevant = relevantKeywords.some(k => qLower.includes(k)) || /\b(who|what|where|how|why)\b.*\b(team|service|person|incident|ad|decision|document)\b/i.test(queryText);
+    if (!isRelevant && queryText.trim().length > 2) {
+      return NextResponse.json({
+        answer: "I'm **Synapse**, your Company Brain agent — I only answer questions about this organization's graph (services, teams, ADRs, incidents, dependencies, and ownership). Try one of these:\n\n- **Blast Radius:** \"If Payment Gateway fails, who gets paged and what breaks?\"\n- **Tribal Knowledge:** \"Who decided JWT enforcement and what services are affected?\"\n- **Incident Forensics:** \"Who resolved the ledger outage and what ADR was created?\"",
+        cypher: '',
+        latencyMs: 0,
+        graphData: { nodes: [], links: [] },
+        refusal: true,
+      });
+    }
+
     const preset = getPresetCypher(queryText);
     let targetCypher = preset.cypher;
     let finalAnswer = '';
