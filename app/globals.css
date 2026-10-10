@@ -4,44 +4,58 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  html {
-    scroll-behavior: smooth;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-  body {
-    background-color: #f8fafc;
-    color: #0f172a;
-    font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
-  }
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+
+body {
+  background-color: #F8FAFC;
+  color: #0f172a;
+  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Ambient radial glows */
+.ambient-glows::before {
+  content: '';
+  position: fixed;
+  top: -10%; left: -10%;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(238,234,255,0.9) 0%, rgba(238,234,255,0) 70%);
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(60px);
+}
+.ambient-glows::after {
+  content: '';
+  position: fixed;
+  bottom: -10%; right: -10%;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(224,242,254,0.9) 0%, rgba(224,242,254,0) 70%);
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(60px);
+}
+
+/* Dot-grid SVG pattern overlay */
+.dot-grid {
+  background-image: url("data:image/svg+xml,%3Csvg width='32' height='32' viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23cbd5e1' fill-opacity='0.35'%3E%3Ccircle cx='2' cy='2' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  background-size: 28px 28px;
+}
+
+/* Sleek scrollbars */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
 @layer utilities {
   .glass {
     background: rgba(255, 255, 255, 0.82);
-    backdrop-filter: blur(14px) saturate(140%);
-    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
     border: 1px solid rgba(226, 232, 240, 0.8);
-    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04), 0 4px 16px rgba(15, 23, 42, 0.05);
-  }
-  .glass-dark {
-    background: rgba(15, 23, 42, 0.72);
-    backdrop-filter: blur(14px) saturate(140%);
-    -webkit-backdrop-filter: blur(14px) saturate(140%);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-  }
-  .text-gradient {
-    background: linear-gradient(135deg, #4f46e5 0%, #2563eb 60%, #059669 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  .gradient-border {
-    position: relative;
-    border-radius: 1rem;
-    background: linear-gradient(white, white) padding-box,
-                linear-gradient(135deg, #4f46e5, #2563eb, #059669) border-box;
-    border: 1px solid transparent;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(15, 23, 42, 0.06);
   }
 }

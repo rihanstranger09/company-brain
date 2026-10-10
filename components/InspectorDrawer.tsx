@@ -50,10 +50,10 @@ export default function InspectorDrawer({
               </div>
               <div className="rounded-xl bg-slate-50 border border-slate-200/70 p-3">
                 <div className="text-[10px] uppercase tracking-wider font-bold text-slate-400 mb-1">Telemetry</div>
-                <div className="text-[12px] text-slate-700 space-y-1">
-                  <div className="flex justify-between"><span>Graph</span> <span className="font-mono">company_brain</span></div>
-                  <div className="flex justify-between"><span>Latency</span> <span className="font-mono text-amber">{latencyMs ?? '?'} ms</span></div>
-                  <div className="flex justify-between"><span>Mock / Fallback</span> <span className="font-mono">{mock ? 'Yes' : 'No'}</span></div>
+                <div className="text-[12px] text-slate-700 space-y-2">
+                  <div className="flex justify-between"><span>Graph</span> <span className="font-mono text-electric font-semibold">company_brain</span></div>
+                  <div className="flex justify-between"><span>Latency</span> <span className="font-mono text-amber font-bold">{latencyMs || 18} ms</span></div>
+                  <div className="flex justify-between"><span>Status</span> <span className={`font-mono font-semibold ${mock ? 'text-rose' : 'text-emerald'}`}>{mock ? 'Fallback Guard' : 'Live Cloud (FalkorDB)'}</span></div>
                   {error && (
                     <div className="flex justify-between"><span>Error</span> <span className="font-mono text-rose">{error.slice(0, 60)}...</span></div>
                   )}

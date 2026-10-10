@@ -4,9 +4,9 @@ import React, { useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { BrainCircuit, ChevronDown, ChevronUp, Layers } from 'lucide-react';
 import ChatPanel from '@/components/ChatPanel';
-import GraphCanvas from '@/components/GraphCanvas';
+import GraphViewer from '@/app/components/GraphViewer';
 import InspectorDrawer from '@/components/InspectorDrawer';
-import type { GraphNode, GraphLink } from '@/components/GraphCanvas';
+import type { GraphNode, GraphLink } from '@/app/components/GraphViewer';
 
 interface ChatMessage {
   id: string;
@@ -138,11 +138,11 @@ export default function HomePage() {
           </div>
 
           <div className="flex-1 min-h-0">
-            <GraphCanvas
+            <GraphViewer
               nodes={graphData.nodes}
               links={graphData.links}
               activeNodeId={activeNode}
-              onNodeClick={(node: GraphNode) => {
+              onNodeClick={(node: any) => {
                 setActiveNode(node.id);
                 // Append a contextual message
                 setMessages((prev) => [
