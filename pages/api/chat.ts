@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
 const SCHEMA_PROMPT = `You are an openCypher generator for a FalkorDB graph called company_brain.
 Ontology:
@@ -22,18 +23,11 @@ Be precise, cite node names/ids, and stay factual based solely on provided data.
 async function generateContent(prompt: string, temperature = 0.2, maxTokens = 512) {
   const apiKey = process.env.GEMINI_API_KEY || '';
   if (!apiKey) throw new Error('GEMINI_API_KEY missing');
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
-  const res = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      contents: [{ role: 'user', parts: [{ text: prompt }] }],
-      generationConfig: { temperature, maxOutputTokens: maxTokens },
-    }),
-  });
-  if (!res.ok) throw new Error(`Gemini API error: ${res.status} ${await res.text()}`);
-  const data = await res.json();
-  return data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+  const genAI = new GoogleGenerativeAI(apiKey);
+  const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+  const result = await model.generateContent(prompt);
+  const responseText = result.response.text();
+  return responseText || '';
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
