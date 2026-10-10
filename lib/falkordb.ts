@@ -104,12 +104,14 @@ const FALLBACK_LINKS: MockLink[] = [
 ];
 
 export async function buildClient() {
-  const host = process.env.FALKORDB_HOST || 'localhost';
-  const port = parseInt(process.env.FALKORDB_PORT || '49188', 10);
-  const password = process.env.FALKORDB_PASSWORD || '';
+  const host = (process.env.FALKORDB_HOST || '').trim();
+  const port = Number(String(process.env.FALKORDB_PORT || '49188').trim());
+  const username = (process.env.FALKORDB_USERNAME || 'falkordb').trim();
+  const password = (process.env.FALKORDB_PASSWORD || '').trim();
   return FalkorDB.connect({
-    host,
-    port,
+    host: host || 'localhost',
+    port: port || 49188,
+    username,
     password: password || undefined,
     socket: { tls: false, connectTimeout: 3000, noDelay: true },
   });
