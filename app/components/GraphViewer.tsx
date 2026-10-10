@@ -70,23 +70,24 @@ export default function GraphViewer({
         nodeId="id"
         nodeLabel="label"
         nodeColor={(n: any) => {
-          if (n.group === 'Service') return '#3B82F6';
-          if (n.group === 'Person') return '#10B981';
-          if (n.group === 'Decision') return '#F59E0B';
-          if (n.group === 'Incident') return '#EF4444';
-          return '#6366F1';
+          if (n.group === 'Service') return '#00A8E8';
+          if (n.group === 'Person') return '#66BB6A';
+          if (n.group === 'Decision') return '#FBAA60';
+          if (n.group === 'Incident') return '#FF7A85';
+          if (n.group === 'Team') return '#26C6DA';
+          return '#7B92B2';
         }}
-        nodeRelSize={8}
-        nodeVal={(n: any) => (n.group === 'decision' || n.group === 'incident' || n.group === 'team' ? 10 : 6)}
-        linkColor={() => '#CBD5E1'}
-        linkWidth={1.5}
-        linkCurvature={0.15}
-        linkDirectionalArrowLength={4}
+        nodeRelSize={9}
+        nodeVal={9}
+        linkColor={() => '#D1D5DB'}
+        linkWidth={1.2}
+        linkCurvature={0.08}
+        linkDirectionalArrowLength={3}
         linkDirectionalArrowRelPos={1}
-        linkDirectionalParticles={4}
-        linkDirectionalParticleSpeed={0.006}
-        linkDirectionalParticleWidth={2.5}
-        linkDirectionalParticleColor={() => '#6366F1'}
+        linkDirectionalParticles={3}
+        linkDirectionalParticleSpeed={0.005}
+        linkDirectionalParticleWidth={2}
+        linkDirectionalParticleColor={() => '#00A8E8'}
         backgroundColor="#F8FAFC"
         onNodeClick={(node: any) => onNodeClick?.(node)}
       />

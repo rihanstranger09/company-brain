@@ -77,7 +77,30 @@ export default function HomePage() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-ink-50 text-slate-900">
+    <main className="min-h-screen bg-gradient-to-b from-[#FFF7ED] via-[#FDF2F8] to-[#E0F2FE] text-slate-900 dot-grid ambient-glows">
+      {/* Hero / Brand Header — Image-1 landing aesthetic */}
+      <header className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-[#FFF7ED]/80 via-[#FCE7F3]/50 to-[#E0F2FE]/60" />
+        <div className="relative max-w-[1600px] mx-auto px-6 md:px-10 py-10 md:py-16 flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+          <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/70 backdrop-blur-md border border-white/50 shadow-sm text-[11px] font-bold text-slate-600 mb-4 tracking-wide uppercase">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald animate-pulse" /> FalkorDB Track 3 · Enterprise Knowledge Graph
+            </div>
+            <h1 className="text-5xl md:text-7xl font-extrabold tracking-tighter leading-[1.1] text-gradient drop-shadow-sm">
+              The new age of<br />
+              <span className="italic font-serif">customer service</span><br />
+              <span className="text-amber-600">is AI-first</span>
+            </h1>
+            <p className="mt-4 text-slate-600 text-base md:text-lg max-w-xl leading-relaxed font-light">
+              Synapse connects engineering microservices, Architecture Decision Records, incident post-mortems, team ownership, and dependencies into an interactive knowledge graph powered by FalkorDB and Gemini 1.5 Flash.
+            </p>
+          </div>
+          <div className="flex gap-3 shrink-0">
+            <a href="#graph-panel" className="px-5 py-3 rounded-xl bg-slate-900 text-white text-sm font-semibold shadow-lg hover:shadow-xl transition">View demo</a>
+            <a href="#graph-panel" className="px-5 py-3 rounded-xl bg-white/70 backdrop-blur-md text-slate-900 border border-slate-200/80 text-sm font-semibold shadow-sm hover:bg-white transition">Start free trial</a>
+          </div>
+        </div>
+      </header>
       {/* Header */}
       <header className="sticky top-0 z-50 glass border-b border-slate-200/70 px-6 py-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -102,7 +125,7 @@ export default function HomePage() {
         </div>
       </header>
 
-      <div className="max-w-[1600px] mx-auto px-4 md:px-6 py-6 grid lg:grid-cols-[42%_1fr] gap-6 items-start">
+      <div id="graph-panel" className="max-w-[1600px] mx-auto px-4 md:px-6 py-6 grid lg:grid-cols-[42%_1fr] gap-6 items-start">
         {/* Left: Chat */}
         <section className="h-[calc(100vh-12rem)] min-h-[520px]">
           <ChatPanel
