@@ -198,3 +198,4 @@ function filterProps(v: any) {
   const { id, name, title, label, ...rest } = v as any;
   return rest;
 }
+export { buildClient as getFalkorClient };
