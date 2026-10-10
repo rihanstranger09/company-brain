@@ -32,6 +32,32 @@ const SCENARIOS = [
   },
 ];
 
+function renderMarkdown(text: string) {
+  let html = text
+    .replace(/\*\*(.+?)\*\*/g, '<strong class="text-slate-900 font-bold">$1</strong>')
+    .replace(/`([^`]+)`/g, '<code class="bg-slate-100 text-electric px-1 py-0.5 rounded text-[11px] font-mono">$1</code>')
+    .replace(/^- (.+)$/gm, '<li class="ml-3 list-disc text-slate-700">$1</li>');
+  // Wrap list items in ul if any
+  if (html.includes('<li')) {
+    const lines = html.split('\n');
+    const out: string[] = [];
+    let inList = false;
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (trimmed.startsWith('<li')) {
+        if (!inList) { out.push(`<ul class="pl-3 space-y-0.5 my-1">`); inList = true; }
+        out.push(line);
+      } else {
+        if (inList) { out.push(`</ul>`); inList = false; }
+        out.push(line);
+      }
+    }
+    if (inList) out.push(`</ul>`);
+    html = out.join('\n');
+  }
+  return html;
+}
+
 export default function ChatPanel({
   onQuery,
   isLoading,
@@ -83,7 +109,7 @@ export default function ChatPanel({
                 {m.role === 'assistant' ? 'AI' : 'YO'}
               </div>
               <div className={`max-w-[85%] rounded-2xl px-3.5 py-2.5 text-[13px] leading-relaxed shadow-sm border ${m.role === 'assistant' ? 'bg-white/90 text-slate-800 border-slate-200/60 rounded-tl-md' : 'bg-slate-900 text-white border-slate-800 rounded-tr-md'}`}>
-                <div className="whitespace-pre-wrap">{m.content}</div>
+                <div className={m.role === 'assistant' ? 'prose prose-sm max-w-none' : 'whitespace-pre-wrap'} dangerouslySetInnerHTML={{ __html: m.role === 'assistant' ? renderMarkdown(m.content) : m.content.replace(/</g, '&lt;').replace(/>/g, '&gt;') }} />
                 {m.meta?.cypher && (
                   <div className="mt-2 text-[10px] font-mono text-slate-500 bg-slate-50 border border-slate-200 rounded-md px-2 py-1 break-all">{m.meta.cypher}</div>
                 )}

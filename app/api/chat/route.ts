@@ -29,20 +29,50 @@ function getPresetCypher(query: string): { cypher: string; syntheticAnswer: stri
   if (q.includes('blast') || q.includes('payment gateway') || q.includes('fail')) {
     return {
       cypher: `MATCH (s:Service {name: 'payment-gateway'})-[:DEPENDS_ON]->(downstream:Service) OPTIONAL MATCH (downstream)<-[:OWNS]-(p:Person) RETURN s.name AS root, downstream.name AS impacted_service, p.name AS owner, p.role AS role`,
-      syntheticAnswer: `⚠️ **Blast Radius Analysis**: If **payment-gateway** fails, critical cascading failures impact **ledger-api** (Tier-1) and **risk-engine** (Tier-2). Downstream data stores (**user-db**) become unreachable. **Carol Danvers** (Payments Lead) and **Alice Chen** (Staff Backend Eng) must be immediately paged.`
+      syntheticAnswer: `### ⚠️ Blast Radius Assessment
+A failure in **payment-gateway** triggers cascading failures across dependent tiers.
+
+**Downstream Impact:**
+- **ledger-api** \`[Tier-1]\` — Transaction ingestion halts immediately
+- **risk-engine** \`[Tier-2]\` — Real-time fraud verification blocked
+- **user-db** \`[Storage]\` — Read/write starvation from connection pool exhaustion
+
+**Incident Ownership & Paging:**
+- **Carol Danvers** *(Payments Lead)* — On-call lead
+- **Alice Chen** *(Staff Backend Eng)* — Platform escalation
+
+**Recommended Action:** Trigger circuit breaker on upstream gateway and reroute to queue worker.`
     };
   }
 
   if (q.includes('jwt') || q.includes('token') || q.includes('tribal') || q.includes('decision')) {
     return {
       cypher: `MATCH (d:Decision {id: 'ADR-101'})-[:AFFECTS]->(s:Service) OPTIONAL MATCH (d)-[:AUTHORED_BY]->(p:Person) RETURN d.title AS title, d.status AS status, s.name AS service, p.name AS author`,
-      syntheticAnswer: `📜 **Tribal Knowledge Traced**: Architecture decision **ADR-101 (Deprecate API keys for JWT)** was authored by **Bob Smith** (Security Architect). It directly affects **auth-service**, mandating automated short-lived token rotation.`
+      syntheticAnswer: `### 📜 Architectural Decision Record
+Trace details for token authentication policies:
+
+- **Record:** \`ADR-101\` — *Deprecate API keys in favor of short-lived JWT*
+- **Status:** **Accepted & Active**
+- **Author:** **Bob Smith** *(Security Architect, SecOps)*
+- **Governed Service:** **auth-service** \`[Tier-1]\`
+
+**Policy Rationale:**
+Eliminates long-lived credential leakage. All downstream microservices must validate short-lived JWT tokens with automated 15-minute rotation.`
     };
   }
 
   return {
     cypher: `MATCH (i:Incident)-[:IMPACTED]->(s:Service) OPTIONAL MATCH (i)-[:RESOLVED_BY]->(p:Person) RETURN i.title AS incident, i.severity AS severity, s.name AS service, p.name AS resolver`,
-    syntheticAnswer: `🚨 **Incident Forensic Traced**: Incident **INC-401 (Ledger Write Timeout Outage)** on **ledger-api** was resolved by **Carol Danvers**. Root cause was SQL write contention, which resulted in architectural decision **ADR-102 (Migrate Ledger to Kafka logs)**.`
+      syntheticAnswer: `### 🚨 Post-Mortem Forensic Trace
+Resolved outage records for core ledger operations:
+
+- **Incident:** \`INC-401\` — *Ledger Write Timeout Outage*
+- **Severity:** \`P1 Critical\`
+- **Root Cause:** Deadlock contention in synchronous SQL ledger writes
+- **Resolved By:** **Carol Danvers** *(Payments Lead)*
+
+**Preventative Architecture:**
+Led to the creation of \`ADR-102\` (Migrate Ledger to event-driven Kafka logs) to eliminate database contention.`
   };
 }
 
@@ -144,7 +174,7 @@ Return ONLY a single valid openCypher query for: "${queryText}". No markdown cod
     // 3. Synthesize Answer
     if (apiKey) {
       try {
-        const answerPrompt = `Question: "${queryText}"\nCypher used: "${targetCypher}"\nSynthesize a 2-paragraph executive response citing team ownership, downstream blast radius, and related architecture decisions.`;
+        const answerPrompt = `Question: "${queryText}"\nSynthesize a 2-paragraph executive response citing team ownership, downstream blast radius, and related architecture decisions.`;
         finalAnswer = await callGemini(answerPrompt, apiKey);
       } catch (err) {
         finalAnswer = preset.syntheticAnswer;
